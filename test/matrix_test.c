@@ -45,7 +45,8 @@ void test_matrix_free() {
     assert(m->data == NULL);
 }
 
-void main() {
+int main() {
     test_matrix_create();
     test_matrix_free();
+    return 0;
 }
