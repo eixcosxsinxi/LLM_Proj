@@ -36,13 +36,9 @@ void test_matrix_free() {
 
     matrix_free(&m);
 
-    printf("rows after = %d\n", m->rows);
-    printf("cols after = %d\n", m->cols);
-    printf("data after = %.6f\n", m->data[0]);
+    printf("m after free = %p\n", (void*)m);
 
-    assert(m->rows == 0);
-    assert(m->cols == 0);
-    assert(m->data == NULL);
+    assert(m == NULL);
 }
 
 int main() {

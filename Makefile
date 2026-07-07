@@ -28,6 +28,11 @@ matrix.o: src/matrix.c# include/matrix.h
 	gcc -c -Iinclude $< -o $(BUILD)/$@
 
 .PHONY: test
-
 test: test_file
 	./$(TEST)/test_file
+
+.PHONY: clean
+clean:
+	rm -f $(BUILD)/*.o
+	rm -f $(PROD)/LLM
+	rm -f $(TEST)/test_file
