@@ -6,7 +6,7 @@
 /* this gives you an instance of a Matrix struct as a pointer (because all the helper methods pass in pointers) */
 Matrix* matrix_create(int rows, int cols) 
 {
-    Matrix* m = calloc(sizeof(Matrix));
+    Matrix* m = calloc(1, sizeof(Matrix));
 
     if (m == NULL) {
         fprintf(stderr, "Failed to allocate matrix.\n");
@@ -17,7 +17,7 @@ Matrix* matrix_create(int rows, int cols)
     m->rows = rows;
     m->cols = cols;
 
-    m->data = calloc(rows * cols * sizeof(float));
+    m->data = calloc(rows * cols, sizeof(float));
 
     if (m->data == NULL) {
         fprintf(stderr, "Failed to allocate matrix data.\n");
