@@ -44,3 +44,13 @@ float matrix_get(const Matrix* m, int row, int col) { // const so you don't acci
 void matrix_set(Matrix* m, int row, int col, float value) {
     m->data[row * m->cols + col] = value;
 }
+
+/* this should print the matrix to the console */
+void matrix_print(const Matrix* m) {
+    for (int i = 0; i < m->rows; i++) {
+        for (int j = 0; j < m->cols; j++) {
+            printf("%8.3f ", matrix_get(m, i, j));
+        }
+        printf("\n");
+    }
+}

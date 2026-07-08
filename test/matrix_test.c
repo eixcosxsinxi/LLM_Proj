@@ -89,10 +89,32 @@ void test_matrix_set() {
     matrix_free(&m);
 }
 
+void test_matrix_print() {
+    printf("\ntest_matrix_print\n");
+
+    int rows = 3;
+    int cols = 3;
+
+    Matrix* m = matrix_create(rows, cols);
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            matrix_set(m, i, j, (float)(i * cols + j));
+        }
+    }
+
+    printf("Matrix contents:\n");
+    matrix_print(m);
+    printf("does it look like it a 3x3 matrix with values from 0 to 8?\n");
+
+    matrix_free(&m);
+}
+
 int main() {
     test_matrix_create();
     test_matrix_free();
     test_matrix_get();
     test_matrix_set();
+    test_matrix_print();
     return 0;
 }
