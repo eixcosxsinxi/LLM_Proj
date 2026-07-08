@@ -35,6 +35,7 @@ void matrix_free(Matrix** m) {
     *m = NULL;
 }
 
+/* this should return the value at the specified row and column in the matrix */
 float matrix_get(const Matrix* m, int row, int col) {
-
+    return m->data[row * m->cols + col];
 }

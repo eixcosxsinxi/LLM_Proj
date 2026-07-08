@@ -41,8 +41,33 @@ void test_matrix_free() {
     assert(m == NULL);
 }
 
+void test_matrix_get() {
+    printf("\ntest_matrix_get\n");
+
+    int rows = 3;
+    int cols = 3;
+
+    int row = 0;
+    int col = 0;
+    float data = 1.23f;
+
+    Matrix* m = matrix_create(rows, cols);
+    m->data[0] = data;
+
+    printf("row = %d\n", row);
+    printf("col = %d\n", col);
+    printf("data = %.6f\n", data);
+
+    float value = matrix_get(m, row, col);
+    printf("value at (%d, %d) = %.6f\n", row, col, value);
+    assert(value == data);
+
+    matrix_free(&m);
+}
+
 int main() {
     test_matrix_create();
     test_matrix_free();
+    test_matrix_get();
     return 0;
 }
