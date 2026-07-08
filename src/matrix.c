@@ -36,6 +36,11 @@ void matrix_free(Matrix** m) {
 }
 
 /* this should return the value at the specified row and column in the matrix */
-float matrix_get(const Matrix* m, int row, int col) {
+float matrix_get(const Matrix* m, int row, int col) { // const so you don't accidentally modify the matrix
     return m->data[row * m->cols + col];
+}
+
+/* this should set the value at the specified row and column in the matrix */
+void matrix_set(Matrix* m, int row, int col, float value) {
+    m->data[row * m->cols + col] = value;
 }
