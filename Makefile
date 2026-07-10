@@ -36,3 +36,7 @@ clean:
 	rm -f $(BUILD)/*.o
 	rm -f $(PROD)/LLM
 	rm -f $(TEST)/test_file
+
+.PHONY: run
+run: LLM
+	./$(PROD)/LLM
