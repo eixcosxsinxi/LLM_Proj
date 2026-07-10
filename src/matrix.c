@@ -100,6 +100,7 @@ Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 	} else {
 		Matrix* result = matrix_create(A->rows, B->cols);
 		matrix_multiply(A, B, result);
-		
+
 		return result;
+	}
 }

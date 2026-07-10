@@ -110,11 +110,58 @@ void test_matrix_print() {
 	matrix_free(&m);
 }
 
+void test_matrix_multiply() {
+	printf("\ntest matrix_multiply\n");
+	
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 1);
+	Matrix* result = matrix_create(2, 1);
+	Matrix* expected = matrix_create(2, 1);
+
+	for (int A_row = 0; A_row < A->rows; A_row++) {
+		for (int A_col = 0; A_col < A->cols; A_col++) {
+			matrix_set(A, A_row, A_col, (float)(A_col + (A_row * A->cols)));
+		}
+	}
+
+	printf("\nmatrix A:\n");
+	matrix_print(A);
+
+	for (int B_row = 0; B_row < B->rows; B_row++) {
+		for (int B_col = 0; B_col < B->cols; B_col++) {
+			matrix_set(B, B_row, B_col, (float)(B_col + (B_row * B->cols)));
+		}
+	}
+
+	printf("\nmatrix B:\n");
+	matrix_print(B);
+
+	matrix_set(expected, 0, 0, 1.0f);
+	matrix_set(expected, 1, 0, 3.0f);
+
+	printf("\nexpected:\n");
+	matrix_print(expected);
+
+	matrix_multiply(A, B, result);
+
+	printf("\nresult:\n");
+	matrix_print(result);
+
+	assert((matrix_get(result, 0, 0) == matrix_get(expected, 0, 0)) &&
+		   (matrix_get(result, 1, 0) == matrix_get(expected, 1, 0)));
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+	matrix_free(&expected);
+}
+
 int main() {
 	test_matrix_create();
 	test_matrix_free();
 	test_matrix_get();
 	test_matrix_set();
 	test_matrix_print();
+	test_matrix_multiply();
 	return 0;
 }
