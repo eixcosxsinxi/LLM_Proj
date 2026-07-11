@@ -73,7 +73,7 @@ int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 	if (A->cols != B->rows) {
 		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
 		return -1;
-	} else if (result->rows != A->rows && result->cols != B->cols) {
+	} else if (result->rows != A->rows || result->cols != B->cols) {
 		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols");
 		return -1;
 	} else {
@@ -106,5 +106,36 @@ Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 		matrix_multiply(A, B, result);
 
 		return result;
+	}
+}
+
+int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result) {
+
+	if (A->cols != B->rows) {
+		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
+		return -1;
+	} else if (result->rows != A->rows || result->cols != B->cols) {
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols");
+		return -1;
+	} else {
+
+		for (int row = 0; row < result->rows; row++) {
+			for (int col = 0; col < result->cols; col++) {
+
+				float sum = 0.0f;
+
+				for (int index = 0; index < A->cols; index++) {
+
+					sum += 
+						matrix_get(A, row, index) *
+						matrix_get(B, index, col);
+				}
+				matrix_set(result,
+						   row,
+						   col,
+						   matrix_get(result, row, col) + sum);
+			}
+		}
+		return 0;
 	}
 }

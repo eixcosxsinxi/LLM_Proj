@@ -20,6 +20,6 @@ void matrix_print(const Matrix* m);
 
 int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result);
 Matrix* matrix_multiply_new(const Matrix*A, const Matrix* B);
-void matrix_multiply_add();
+int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result);
 
 #endif

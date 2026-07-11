@@ -171,6 +171,11 @@ void test_dimensions_AB() {
 
 	int success = matrix_multiply(A, B, result);
 	assert(success = -1);
+	printf("\n");
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
 }
 
 void test_dimensions_result() {
@@ -190,6 +195,63 @@ void test_dimensions_result() {
 
 	int success = matrix_multiply(A, B, result);
 	assert(success = -1);
+	printf("\n");
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+}
+
+void test_multiply_add() {
+	printf("\ntest matrix_multiply_add\n");
+	
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 1);
+	Matrix* result = matrix_create(2, 1);
+	Matrix* expected = matrix_create(2, 1);
+
+	for (int A_row = 0; A_row < A->rows; A_row++) {
+		for (int A_col = 0; A_col < A->cols; A_col++) {
+			matrix_set(A, A_row, A_col, (float)(A_col + (A_row * A->cols)));
+		}
+	}
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	for (int B_row = 0; B_row < B->rows; B_row++) {
+		for (int B_col = 0; B_col < B->cols; B_col++) {
+			matrix_set(B, B_row, B_col, (float)(B_col + (B_row * B->cols)));
+		}
+	}
+
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	matrix_set(result, 0, 0, 3.0f);
+	matrix_set(result, 1, 0, 2.0f);
+
+	printf("result before multiply_add:\n");
+	matrix_print(result);
+
+	matrix_set(expected, 0, 0, 4.0f);
+	matrix_set(expected, 1, 0, 5.0f);
+
+	printf("expected:\n");
+	matrix_print(expected);
+
+	matrix_multiply_add(A, B, result);
+
+	printf("result:\n");
+	matrix_print(result);
+
+	assert((matrix_get(result, 0, 0) == matrix_get(expected, 0, 0)) &&
+		   (matrix_get(result, 1, 0) == matrix_get(expected, 1, 0)));
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+	matrix_free(&expected);
 }
 
 int main() {
@@ -201,6 +263,7 @@ int main() {
 	test_matrix_multiply();
 	test_dimensions_AB();
 	test_dimensions_result();
+	test_multiply_add();
 
 	return 0;
 }
