@@ -124,7 +124,7 @@ void test_matrix_multiply() {
 		}
 	}
 
-	printf("\nmatrix A:\n");
+	printf("matrix A:\n");
 	matrix_print(A);
 
 	for (int B_row = 0; B_row < B->rows; B_row++) {
@@ -133,18 +133,18 @@ void test_matrix_multiply() {
 		}
 	}
 
-	printf("\nmatrix B:\n");
+	printf("matrix B:\n");
 	matrix_print(B);
 
 	matrix_set(expected, 0, 0, 1.0f);
 	matrix_set(expected, 1, 0, 3.0f);
 
-	printf("\nexpected:\n");
+	printf("expected:\n");
 	matrix_print(expected);
 
 	matrix_multiply(A, B, result);
 
-	printf("\nresult:\n");
+	printf("result:\n");
 	matrix_print(result);
 
 	assert((matrix_get(result, 0, 0) == matrix_get(expected, 0, 0)) &&
@@ -156,6 +156,42 @@ void test_matrix_multiply() {
 	matrix_free(&expected);
 }
 
+void test_dimensions_AB() {
+	printf("\ntest wrong dimensions of A and B\n");
+
+	Matrix* A = matrix_create(1, 2);
+	Matrix* B = matrix_create(3, 4);
+	Matrix* result = matrix_create(1, 4);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+	printf("dimension error: matrix A cannot multiply matrix B\n");
+
+	int success = matrix_multiply(A, B, result);
+	assert(success = -1);
+}
+
+void test_dimensions_result() {
+	printf("\ntest wrong dimensions of result\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 1);
+	Matrix* result = matrix_create(1, 4);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+	printf("result matrix:\n");
+	matrix_print(result);
+	printf("dimension error: result cannot fit in provided matrix\n");
+
+	int success = matrix_multiply(A, B, result);
+	assert(success = -1);
+}
+
 int main() {
 	test_matrix_create();
 	test_matrix_free();
@@ -163,5 +199,8 @@ int main() {
 	test_matrix_set();
 	test_matrix_print();
 	test_matrix_multiply();
+	test_dimensions_AB();
+	test_dimensions_result();
+
 	return 0;
 }

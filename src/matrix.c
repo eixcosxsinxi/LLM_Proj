@@ -55,8 +55,8 @@ void matrix_print(const Matrix* m) {
 	}
 }
 
-/* this should multiply two matrices and store in result */
-void matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
+/* this should multiply two matrices and store in result. returns 0 on success, -1 on failure */
+int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 	/*
 	*	Matrix multiplication follows from the dot product.
 	*	For two matrices A and B, the cols of A must be equal to the rows of B.
@@ -72,7 +72,10 @@ void matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 	*/
 	if (A->cols != B->rows) {
 		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
-		exit(EXIT_FAILURE);
+		return -1;
+	} else if (result->rows != A->rows && result->cols != B->cols) {
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols");
+		return -1;
 	} else {
 
 		for (int row = 0; row < result->rows; row++) {
@@ -89,14 +92,15 @@ void matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 				matrix_set(result, row, col, sum);
 			}
 		}
+		return 0;
 	}
 }
 
-/* (for experimentation purposes...) */
+/* (for experimentation purposes...) returns NULL on failure */
 Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 	if (A->cols != B->rows) {
 		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
-		exit(EXIT_FAILURE);
+		return NULL;
 	} else {
 		Matrix* result = matrix_create(A->rows, B->cols);
 		matrix_multiply(A, B, result);

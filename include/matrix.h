@@ -18,7 +18,8 @@ float matrix_get(const Matrix* m, int row, int col);
 void matrix_set(Matrix* m, int row, int col, float value);
 void matrix_print(const Matrix* m);
 
-void matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result);
+int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result);
 Matrix* matrix_multiply_new(const Matrix*A, const Matrix* B);
+void matrix_multiply_add();
 
 #endif
