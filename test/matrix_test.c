@@ -3,8 +3,8 @@
 #include <assert.h>
 #include "matrix.h"
 
-void test_matrix_create() {
-	printf("\ntest_matrix_create\n");
+void test_create() {
+	printf("\ntest matrix_create\n");
 
 	int rows = 3;
 	int cols = 3;
@@ -21,8 +21,8 @@ void test_matrix_create() {
 	assert(*(m->data) == data);
 }
 
-void test_matrix_free() {
-	printf("\ntest_matrix_free\n");
+void test_free() {
+	printf("\ntest matrix_free\n");
 	int rows = 3;
 	int cols = 3;
 	float data = 0;
@@ -41,8 +41,8 @@ void test_matrix_free() {
 	assert(m == NULL);
 }
 
-void test_matrix_get() {
-	printf("\ntest_matrix_get\n");
+void test_get() {
+	printf("\ntest matrix_get\n");
 
 	int rows = 3;
 	int cols = 3;
@@ -65,8 +65,8 @@ void test_matrix_get() {
 	matrix_free(&m);
 }
 
-void test_matrix_set() {
-	printf("\ntest_matrix_set\n");
+void test_set() {
+	printf("\ntest matrix_set\n");
 
 	int rows = 3;
 	int cols = 3;
@@ -89,8 +89,8 @@ void test_matrix_set() {
 	matrix_free(&m);
 }
 
-void test_matrix_print() {
-	printf("\ntest_matrix_print\n");
+void test_print() {
+	printf("\ntest matrix_print\n");
 
 	int rows = 3;
 	int cols = 3;
@@ -110,7 +110,7 @@ void test_matrix_print() {
 	matrix_free(&m);
 }
 
-void test_matrix_multiply() {
+void test_multiply() {
 	printf("\ntest matrix_multiply\n");
 	
 	Matrix* A = matrix_create(2, 2);
@@ -156,7 +156,7 @@ void test_matrix_multiply() {
 	matrix_free(&expected);
 }
 
-void test_dimensions_AB() {
+void test_multiply_AB_dimensions() {
 	printf("\ntest wrong dimensions of A and B\n");
 
 	Matrix* A = matrix_create(1, 2);
@@ -178,7 +178,7 @@ void test_dimensions_AB() {
 	matrix_free(&result);
 }
 
-void test_dimensions_result() {
+void test_multiply_result_dimensions() {
 	printf("\ntest wrong dimensions of result\n");
 
 	Matrix* A = matrix_create(2, 2);
@@ -254,16 +254,269 @@ void test_multiply_add() {
 	matrix_free(&expected);
 }
 
+void test_equals() {
+	printf("\ntest matrix_equals\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 2);
+	Matrix* C = matrix_create(2, 2);
+
+	for (int row = 0; row < A->rows; row++) {
+		for (int col = 0; col < A->cols; col++) {
+			matrix_set(A, row, col, (float)(row + col));
+			matrix_set(B, row, col, (float)(row + col));
+			matrix_set(C, row, col, (float)(row + col + 1)); // Different values
+		}
+	}
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+	printf("matrix C:\n");
+	matrix_print(C);
+
+	int equal_AB = matrix_equals(A, B);
+	int equal_AC = matrix_equals(A, C);
+
+	printf("A equals B: %d\n", equal_AB);
+	printf("A equals C: %d\n", equal_AC);
+
+	assert(equal_AB == 0); // A and B are equal
+	assert(equal_AC == -1); // A and C are not equal
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&C);
+}
+
+void test_copy() {
+	printf("\ntest matrix_copy\n");
+
+	Matrix* src = matrix_create(2, 2);
+	Matrix* dst = matrix_create(2, 2);
+
+	for (int row = 0; row < src->rows; row++) {
+		for (int col = 0; col < src->cols; col++) {
+			matrix_set(src, row, col, (float)(row + col));
+		}
+	}
+
+	printf("source matrix:\n");
+	matrix_print(src);
+
+	int copy_success = matrix_copy(src, dst);
+	if (copy_success == 0) {
+		printf("destination matrix after copy:\n");
+		matrix_print(dst);
+	} else {
+		printf("matrix_copy failed due to dimension mismatch.\n");
+	}
+
+	assert(copy_success == 0); // Copy should succeed
+
+	int equal_src_dst = matrix_equals(src, dst);
+	printf("src equals dst: %d\n", equal_src_dst);
+	assert(equal_src_dst == 0); // src and dst should be equal
+
+	matrix_free(&src);
+	matrix_free(&dst);
+}
+
+void test_copy_dimension_mismatch() {
+	printf("\ntest matrix_copy with dimension mismatch\n");
+
+	Matrix* src = matrix_create(2, 2);
+	Matrix* dst = matrix_create(3, 3); // Different dimensions
+
+	for (int row = 0; row < src->rows; row++) {
+		for (int col = 0; col < src->cols; col++) {
+			matrix_set(src, row, col, (float)(row + col));
+		}
+	}
+
+	printf("source matrix:\n");
+	matrix_print(src);
+	printf("destination matrix before copy:\n");
+	matrix_print(dst);
+
+	int copy_success = matrix_copy(src, dst);
+	if (copy_success == -1) {
+		printf("\n");
+		printf("matrix_copy failed due to dimension mismatch as expected.\n");
+	} else {
+		printf("matrix_copy unexpectedly succeeded.\n");
+	}
+
+	assert(copy_success == -1); // Copy should fail due to dimension mismatch
+
+	matrix_free(&src);
+	matrix_free(&dst);
+}
+
+void test_add() {
+	printf("\ntest matrix_add\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 2);
+	Matrix* result = matrix_create(2, 2);
+	Matrix* expected = matrix_create(2, 2);
+
+	for (int row = 0; row < A->rows; row++) {
+		for (int col = 0; col < A->cols; col++) {
+			matrix_set(A, row, col, (float)(row + col));
+			matrix_set(B, row, col, (float)(row + col + 1)); // Different values
+		}
+	}
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	// Expected result of A + B
+	for (int row = 0; row < expected->rows; row++) {
+		for (int col = 0; col < expected->cols; col++) {
+			matrix_set(expected, row, col, matrix_get(A, row, col) + matrix_get(B, row, col));
+		}
+	}
+
+	int add_success = matrix_add(A, B, result);
+	if (add_success == 0) {
+		printf("result of A + B:\n");
+		matrix_print(result);
+	} else {
+		printf("matrix_add failed due to dimension mismatch.\n");
+	}
+
+	assert(add_success == 0); // Addition should succeed
+
+	int equal_result_expected = matrix_equals(result, expected);
+	printf("result equals expected: %d\n", equal_result_expected);
+	assert(equal_result_expected == 0); // result and expected should be equal
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+	matrix_free(&expected);
+}
+
+void test_add_dimension_mismatch() {
+	printf("\ntest matrix_add with dimension mismatch\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(3, 3); // Different dimensions
+	Matrix* result = matrix_create(2, 2);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	int add_success = matrix_add(A, B, result);
+	if (add_success == -1) {
+		printf("\nmatrix_add failed due to dimension mismatch as expected.\n");
+	} else {
+		printf("matrix_add unexpectedly succeeded.\n");
+	}
+
+	assert(add_success == -1); // Addition should fail due to dimension mismatch
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+}
+
+void test_subtract() {
+	printf("\ntest matrix_subtract\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 2);
+	Matrix* result = matrix_create(2, 2);
+	Matrix* expected = matrix_create(2, 2);
+
+	for (int row = 0; row < A->rows; row++) {
+		for (int col = 0; col < A->cols; col++) {
+			matrix_set(A, row, col, (float)(row + col + 1));
+			matrix_set(B, row, col, (float)(row + col)); // Different values
+		}
+	}
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	// Expected result of A - B
+	for (int row = 0; row < expected->rows; row++) {
+		for (int col = 0; col < expected->cols; col++) {
+			matrix_set(expected, row, col, matrix_get(A, row, col) - matrix_get(B, row, col));
+		}
+	}
+
+	int subtract_success = matrix_subtract(A, B, result);
+	if (subtract_success == 0) {
+		printf("result of A - B:\n");
+		matrix_print(result);
+	} else {
+		printf("\nmatrix_subtract failed due to dimension mismatch.\n");
+	}
+
+	assert(subtract_success == 0); // Subtraction should succeed
+
+	int equal_result_expected = matrix_equals(result, expected);
+	printf("result equals expected: %d\n", equal_result_expected);
+	assert(equal_result_expected == 0); // result and expected should be equal
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+	matrix_free(&expected);
+}
+
+void test_subtract_dimension_mismatch() {
+	printf("\ntest matrix_subtract with dimension mismatch\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(3, 3); // Different dimensions
+	Matrix* result = matrix_create(2, 2);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	int subtract_success = matrix_subtract(A, B, result);
+	if (subtract_success == -1) {
+		printf("\nmatrix_subtract failed due to dimension mismatch as expected.\n");
+	} else {
+		printf("matrix_subtract unexpectedly succeeded.\n");
+	}
+
+	assert(subtract_success == -1); // Subtraction should fail due to dimension mismatch
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+}
+
 int main() {
-	test_matrix_create();
-	test_matrix_free();
-	test_matrix_get();
-	test_matrix_set();
-	test_matrix_print();
-	test_matrix_multiply();
-	test_dimensions_AB();
-	test_dimensions_result();
+	test_create();
+	test_free();
+	test_get();
+	test_set();
+	test_print();
+	test_multiply();
+	test_multiply_AB_dimensions();
+	test_multiply_result_dimensions();
 	test_multiply_add();
+	test_equals();
+	test_copy();
+	test_copy_dimension_mismatch();
+	test_add();
+	test_add_dimension_mismatch();
+	test_subtract();
+	test_subtract_dimension_mismatch();
 
 	return 0;
 }
