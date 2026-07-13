@@ -500,6 +500,99 @@ void test_subtract_dimension_mismatch() {
 	matrix_free(&result);
 }
 
+void test_scalar_multiply() {
+	printf("\ntest matrix_scalar_multiply\n");
+
+	float scalar = 2.0f;
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* result = matrix_create(2, 2);
+	Matrix* expected = matrix_create(2, 2);
+
+	matrix_set(A, 0, 0, 1.0f);
+	matrix_set(A, 1, 1, 2.0f);
+	
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	matrix_set(expected, 0, 0, 2.0f);
+	matrix_set(expected, 1, 1, 4.0f);
+
+	printf("expected:\n");
+	matrix_print(expected);
+
+	matrix_scalar_multiply(A, scalar, result);
+
+	printf("result:\n");
+	matrix_print(result);
+
+	assert(matrix_equals(expected, result) == 0);
+
+	matrix_free(&A);
+	matrix_free(&result);
+	matrix_free(&expected);
+}
+
+void test_scalar_dimension_mismatch() {
+	printf("\ntest matrix_scalar_multiply for dimension mismatch\n");
+
+	float scalar = 2.0f;
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* result = matrix_create(3, 3);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("scalar is: %f\n", scalar);
+	
+	printf("result matrix:\n");
+	matrix_print(result);
+
+	printf("this should produce a dimension error\n");
+
+	int pass = matrix_scalar_multiply(A, scalar, result);
+
+	assert(pass == -1);
+
+	matrix_free(&A);
+	matrix_free(&result);
+
+	printf("\n");
+}
+
+void test_fill() {
+	printf("\ntest matrix_fill\n");
+
+	float val = 3.14f;
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* expected = matrix_create(2, 2);
+
+	matrix_set(expected, 0, 0, val);
+	matrix_set(expected, 0, 1, val);
+	matrix_set(expected, 1, 0, val);
+	matrix_set(expected, 1, 1, val);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("fill val: %f\n", val);
+
+	printf("expected matrix:\n");
+	matrix_print(expected);
+
+	matrix_fill(A, val);
+
+	printf("A after fill:\n");
+	matrix_print(A);
+
+	assert(matrix_equals(A, expected) == 0);
+
+	matrix_free(&expected);
+	matrix_free(&A);
+}
+
 int main() {
 	test_create();
 	test_free();
@@ -517,6 +610,9 @@ int main() {
 	test_add_dimension_mismatch();
 	test_subtract();
 	test_subtract_dimension_mismatch();
+	test_scalar_multiply();
+	test_scalar_dimension_mismatch();
+	test_fill();
 
 	return 0;
 }

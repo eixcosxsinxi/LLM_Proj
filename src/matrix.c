@@ -3,6 +3,11 @@
 
 #include "matrix.h"
 
+/* 
+* Matrix Creation
+* these functions aid in the creation and anihilation of matrices
+*/
+
 /* this gives you an instance of a Matrix struct as a pointer (because all the helper methods pass in pointers) */
 Matrix* matrix_create(int rows, int cols) 
 {
@@ -35,9 +40,33 @@ void matrix_free(Matrix** m) {
 	*m = NULL;
 }
 
+int matrix_copy(const Matrix* src, Matrix* dst) {
+	if (src->rows != dst->rows || src->cols != dst->cols) {
+		fprintf(stderr, "could not copy these matrices: src.rows != dst.rows or src.cols != dst.cols");
+		return -1;
+	} else {
+		for (int row = 0; row < src->rows; row++) {
+			for (int col = 0; col < src->cols; col++) {
+				matrix_set(dst, row, col, matrix_get(src, row, col));
+			}
+		}
+		return 0;
+	}
+}
+
+// reshape
+// resize
+// view
+
+/*
+* Matrix Utilities
+* these are vairious functions that can't be classified as creation or performing math operations
+*/
+
 /* this should return the value at the specified row and column in the matrix */
 float matrix_get(const Matrix* m, int row, int col) { // const so you don't accidentally modify the matrix
-	// TODO: make sure you put check for out of bounds
+	// TODO: check for out of bounds
+	// TODO: maybe use NAN as return
 	return m->data[row * m->cols + col];
 }
 
@@ -58,6 +87,106 @@ void matrix_print(const Matrix* m) {
 			printf("%8.3f ", matrix_get(m, i, j));
 		}
 		printf("\n");
+	}
+}
+
+/* this does what the name implies: checks if two matrices are identical */
+int matrix_equals(const Matrix* A, const Matrix* B) {
+	if (A->rows != B->rows || A->cols != B->cols) {
+		return -1; // not equal
+	} else {
+		for (int row = 0; row < A->rows; row++) {
+			for (int col = 0; col < A->cols; col++) {
+				if (matrix_get(A, row, col) != matrix_get(B, row, col)) {
+					return -1; // not equal
+				}
+			}
+		}
+		return 0; // equal
+	}
+}
+
+// save
+// load
+
+/*
+* Matrix Initialization
+* these functions set the initial values of a matrix
+*/
+
+/* this takes a value of choice and fills an entire matrix with that value */
+void matrix_fill(Matrix* A, const float val) {
+	for (int row = 0; row < A->rows; row++) {
+		for (int col = 0; col < A->cols; col++) {
+			matrix_set(A, row, col, val);
+		}
+	}
+}
+
+// zeroes
+// ones
+// identity
+// unifom
+// normal
+// xavier
+// he
+
+/*
+* Matrix Arithmetic
+* these functions perform various non statistical mathematical functions on a provided matrix
+*/
+
+/* this should add two matrices together and store in provided result matrix */
+int matrix_add(const Matrix* A, const Matrix* B, Matrix* result) {
+	if (A->rows != B->rows || A->cols != B->cols) {
+		fprintf(stderr, "could not add these matrices: A.rows != B.rows or A.cols != B.cols");
+		return -1;
+	} else if (result->rows != A->rows || result->cols != A->cols) {
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols");
+		return -1;
+	} else {
+		for (int row = 0; row < A->rows; row++) {
+			for (int col = 0; col < A->cols; col++) {
+				matrix_set(result, row, col, matrix_get(A, row, col) + matrix_get(B, row, col));
+			}
+		}
+		return 0;
+	}
+}
+
+/* this should subtract two matrices and store in provided result matrix */
+int matrix_subtract(const Matrix* A, const Matrix* B, Matrix* result) {
+	if (A->rows != B->rows || A->cols != B->cols) {
+		fprintf(stderr, "could not subtract these matrices: A.rows != B.rows or A.cols != B.cols");
+		return -1;
+	} else if (result->rows != A->rows || result->cols != A->cols) {
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols");
+		return -1;
+	} else {
+		for (int row = 0; row < A->rows; row++) {
+			for (int col = 0; col < A->cols; col++) {
+				matrix_set(result, row, col, matrix_get(A, row, col) - matrix_get(B, row, col));
+			}
+		}
+		return 0;
+	}
+}
+
+/* this should perform element wise scalar matrix multiplication and store in provided result matrix */
+int matrix_scalar_multiply(const Matrix* A, float scalar, Matrix* result) {
+	if (result->rows != A->rows || result->cols != A->cols) {
+		fprintf(stderr, "dimension mismatch between input matrix and result matrix");
+		return -1;
+	} else {
+		for (int row = 0; row < result->rows; row++) {
+			for (int col = 0; col < result->cols; col++) {
+				matrix_set(result,
+						   row,
+						   col,
+						   matrix_get(A, row, col) * scalar);
+			}
+		}
+		return 0;
 	}
 }
 
@@ -102,6 +231,7 @@ int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 	}
 }
 
+// this function should be placed in utilities but needs to be here since it relies on matrix_multiply
 /* (for experimentation purposes...) returns NULL on failure */
 Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 	if (A->cols != B->rows) {
@@ -115,8 +245,8 @@ Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 	}
 }
 
+/* this should perform matrix multiplication between two matrices and += with the provided result matrix */
 int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result) {
-
 	if (A->cols != B->rows) {
 		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
 		return -1;
@@ -140,69 +270,6 @@ int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result) {
 						   row,
 						   col,
 						   matrix_get(result, row, col) + sum);
-			}
-		}
-		return 0;
-	}
-}
-
-int matrix_copy(const Matrix* src, Matrix* dst) {
-	if (src->rows != dst->rows || src->cols != dst->cols) {
-		fprintf(stderr, "could not copy these matrices: src.rows != dst.rows or src.cols != dst.cols");
-		return -1;
-	} else {
-		for (int row = 0; row < src->rows; row++) {
-			for (int col = 0; col < src->cols; col++) {
-				matrix_set(dst, row, col, matrix_get(src, row, col));
-			}
-		}
-		return 0;
-	}
-}
-
-int matrix_equals(const Matrix* A, const Matrix* B) {
-	if (A->rows != B->rows || A->cols != B->cols) {
-		return -1; // not equal
-	} else {
-		for (int row = 0; row < A->rows; row++) {
-			for (int col = 0; col < A->cols; col++) {
-				if (matrix_get(A, row, col) != matrix_get(B, row, col)) {
-					return -1; // not equal
-				}
-			}
-		}
-		return 0; // equal
-	}
-}
-
-int matrix_add(const Matrix* A, const Matrix* B, Matrix* result) {
-	if (A->rows != B->rows || A->cols != B->cols) {
-		fprintf(stderr, "could not add these matrices: A.rows != B.rows or A.cols != B.cols");
-		return -1;
-	} else if (result->rows != A->rows || result->cols != A->cols) {
-		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols");
-		return -1;
-	} else {
-		for (int row = 0; row < A->rows; row++) {
-			for (int col = 0; col < A->cols; col++) {
-				matrix_set(result, row, col, matrix_get(A, row, col) + matrix_get(B, row, col));
-			}
-		}
-		return 0;
-	}
-}
-
-int matrix_subtract(const Matrix* A, const Matrix* B, Matrix* result) {
-	if (A->rows != B->rows || A->cols != B->cols) {
-		fprintf(stderr, "could not subtract these matrices: A.rows != B.rows or A.cols != B.cols");
-		return -1;
-	} else if (result->rows != A->rows || result->cols != A->cols) {
-		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols");
-		return -1;
-	} else {
-		for (int row = 0; row < A->rows; row++) {
-			for (int col = 0; col < A->cols; col++) {
-				matrix_set(result, row, col, matrix_get(A, row, col) - matrix_get(B, row, col));
 			}
 		}
 		return 0;

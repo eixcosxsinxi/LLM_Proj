@@ -10,6 +10,8 @@ typedef struct
 	float* data;
 } Matrix;
 
+// TODO: define NaN
+
 /* function declarations */
 
 /* Creation */
@@ -30,7 +32,7 @@ int matrix_equals(const Matrix* A, const Matrix* B);
 Matrix* matrix_multiply_new(const Matrix*A, const Matrix* B);
 
 /* Initialization */
-// TODO: fill
+void matrix_fill(Matrix* A, const float val);
 // zeroes
 // ones
 // identitiy
@@ -42,10 +44,11 @@ Matrix* matrix_multiply_new(const Matrix*A, const Matrix* B);
 /* Arithmetic */
 int matrix_add(const Matrix* A, const Matrix* B, Matrix* result);
 int matrix_subtract(const Matrix* A, const Matrix* B, Matrix* result);
-// TODO: scale
+int matrix_scalar_multiply(const Matrix* A, float scalar, Matrix* result);
 int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result);
 int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result);
 // TODO: hadamard
+int matrix_hadamard(const Matrix* A, const Matrix* B, Matrix* result);
 
 /* Statistics */
 // sum
