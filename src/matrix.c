@@ -42,7 +42,7 @@ void matrix_free(Matrix** m) {
 
 int matrix_copy(const Matrix* src, Matrix* dst) {
 	if (src->rows != dst->rows || src->cols != dst->cols) {
-		fprintf(stderr, "could not copy these matrices: src.rows != dst.rows or src.cols != dst.cols");
+		fprintf(stderr, "could not copy these matrices: src.rows != dst.rows or src.cols != dst.cols\n");
 		return -1;
 	} else {
 		for (int row = 0; row < src->rows; row++) {
@@ -139,10 +139,10 @@ void matrix_fill(Matrix* A, const float val) {
 /* this should add two matrices together and store in provided result matrix */
 int matrix_add(const Matrix* A, const Matrix* B, Matrix* result) {
 	if (A->rows != B->rows || A->cols != B->cols) {
-		fprintf(stderr, "could not add these matrices: A.rows != B.rows or A.cols != B.cols");
+		fprintf(stderr, "could not add these matrices: A.rows != B.rows or A.cols != B.cols\n");
 		return -1;
 	} else if (result->rows != A->rows || result->cols != A->cols) {
-		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols");
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols\n");
 		return -1;
 	} else {
 		for (int row = 0; row < A->rows; row++) {
@@ -157,10 +157,10 @@ int matrix_add(const Matrix* A, const Matrix* B, Matrix* result) {
 /* this should subtract two matrices and store in provided result matrix */
 int matrix_subtract(const Matrix* A, const Matrix* B, Matrix* result) {
 	if (A->rows != B->rows || A->cols != B->cols) {
-		fprintf(stderr, "could not subtract these matrices: A.rows != B.rows or A.cols != B.cols");
+		fprintf(stderr, "could not subtract these matrices: A.rows != B.rows or A.cols != B.cols\n");
 		return -1;
 	} else if (result->rows != A->rows || result->cols != A->cols) {
-		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols");
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != A.cols\n");
 		return -1;
 	} else {
 		for (int row = 0; row < A->rows; row++) {
@@ -175,7 +175,7 @@ int matrix_subtract(const Matrix* A, const Matrix* B, Matrix* result) {
 /* this should perform element wise scalar matrix multiplication and store in provided result matrix */
 int matrix_scalar_multiply(const Matrix* A, float scalar, Matrix* result) {
 	if (result->rows != A->rows || result->cols != A->cols) {
-		fprintf(stderr, "dimension mismatch between input matrix and result matrix");
+		fprintf(stderr, "dimension mismatch between input matrix and result matrix\n");
 		return -1;
 	} else {
 		for (int row = 0; row < result->rows; row++) {
@@ -206,10 +206,10 @@ int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 	*	that is why it is important that A needs to have the same cols as B has rows so the dot product works.
 	*/
 	if (A->cols != B->rows) {
-		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
+		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)\n");
 		return -1;
 	} else if (result->rows != A->rows || result->cols != B->cols) {
-		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols");
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols\n");
 		return -1;
 	} else {
 
@@ -235,7 +235,7 @@ int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result) {
 /* (for experimentation purposes...) returns NULL on failure */
 Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 	if (A->cols != B->rows) {
-		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
+		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)\n");
 		return NULL;
 	} else {
 		Matrix* result = matrix_create(A->rows, B->cols);
@@ -248,10 +248,10 @@ Matrix* matrix_multiply_new(const Matrix* A, const Matrix* B) {
 /* this should perform matrix multiplication between two matrices and += with the provided result matrix */
 int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result) {
 	if (A->cols != B->rows) {
-		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)");
+		fprintf(stderr, "could not multiply these matrices: A.cols != B.rows (inner dimensions do not match!)\n");
 		return -1;
 	} else if (result->rows != A->rows || result->cols != B->cols) {
-		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols");
+		fprintf(stderr, "could not store result in provided matrix: result.rows != A.rows or result.cols != B.cols\n");
 		return -1;
 	} else {
 
@@ -275,3 +275,62 @@ int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result) {
 		return 0;
 	}
 }
+
+/* this should perform the matrix hadamard product - which is just element-wise multiplication - and store in provided result matrix */
+int matrix_hadamard(const Matrix* A, const Matrix* B, Matrix* result) {
+	if (A->rows != B->rows || A->cols != B->cols) {
+		fprintf(stderr, "dimensions of A do not match dimensions of B\n");
+		return -1;
+	} else if (result->rows != A->rows || result->cols != A->cols) {
+		fprintf(stderr, "dimensions of result do not match A and B dimensions\n");
+		return -1;
+	} else {
+		for (int row = 0; row < result->rows; row++) {
+			for (int col = 0; col < result->cols; col++) {
+				matrix_set(result,
+						   row,
+						   col,
+						   matrix_get(A, row, col) *
+						   matrix_get(B, row, col));
+			}
+		}
+		return 0;
+	}
+}
+
+/*
+* Matrix Statistics
+* these functions aid in the stochastic calculations on matrices
+*/
+
+// sum
+// mean
+// variance
+// stddev
+// max
+// min
+// argmax
+
+/*
+* Matrix Transformations
+* necessary linear algebra for accessing and rearranging data in matrices
+*/
+
+Matrix* matrix_transpose(Matrix* A) {
+	Matrix* result = matrix_create(A->cols, A->rows);
+	
+	for (int row = 0; row < A->rows; row++) {
+		for (int col = 0; col< A->cols; col++) {
+			matrix_set(result,
+					   col,
+					   row,
+					   matrix_get(A, row, col));
+		}
+	}
+
+	return result;
+}
+
+// slice
+// concatenate
+// flatten

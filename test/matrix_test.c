@@ -65,6 +65,8 @@ void test_get() {
 	matrix_free(&m);
 }
 
+// TODO: test for out of bounds
+
 void test_set() {
 	printf("\ntest matrix_set\n");
 
@@ -88,6 +90,8 @@ void test_set() {
 
 	matrix_free(&m);
 }
+
+// TODO: test for out of bounds
 
 void test_print() {
 	printf("\ntest matrix_print\n");
@@ -171,7 +175,6 @@ void test_multiply_AB_dimensions() {
 
 	int success = matrix_multiply(A, B, result);
 	assert(success = -1);
-	printf("\n");
 
 	matrix_free(&A);
 	matrix_free(&B);
@@ -195,7 +198,6 @@ void test_multiply_result_dimensions() {
 
 	int success = matrix_multiply(A, B, result);
 	assert(success = -1);
-	printf("\n");
 
 	matrix_free(&A);
 	matrix_free(&B);
@@ -342,7 +344,6 @@ void test_copy_dimension_mismatch() {
 
 	int copy_success = matrix_copy(src, dst);
 	if (copy_success == -1) {
-		printf("\n");
 		printf("matrix_copy failed due to dimension mismatch as expected.\n");
 	} else {
 		printf("matrix_copy unexpectedly succeeded.\n");
@@ -415,7 +416,7 @@ void test_add_dimension_mismatch() {
 
 	int add_success = matrix_add(A, B, result);
 	if (add_success == -1) {
-		printf("\nmatrix_add failed due to dimension mismatch as expected.\n");
+		printf("matrix_add failed due to dimension mismatch as expected.\n");
 	} else {
 		printf("matrix_add unexpectedly succeeded.\n");
 	}
@@ -459,7 +460,7 @@ void test_subtract() {
 		printf("result of A - B:\n");
 		matrix_print(result);
 	} else {
-		printf("\nmatrix_subtract failed due to dimension mismatch.\n");
+		printf("matrix_subtract failed due to dimension mismatch.\n");
 	}
 
 	assert(subtract_success == 0); // Subtraction should succeed
@@ -488,7 +489,7 @@ void test_subtract_dimension_mismatch() {
 
 	int subtract_success = matrix_subtract(A, B, result);
 	if (subtract_success == -1) {
-		printf("\nmatrix_subtract failed due to dimension mismatch as expected.\n");
+		printf("matrix_subtract failed due to dimension mismatch as expected.\n");
 	} else {
 		printf("matrix_subtract unexpectedly succeeded.\n");
 	}
@@ -557,8 +558,6 @@ void test_scalar_dimension_mismatch() {
 
 	matrix_free(&A);
 	matrix_free(&result);
-
-	printf("\n");
 }
 
 void test_fill() {
@@ -593,6 +592,127 @@ void test_fill() {
 	matrix_free(&A);
 }
 
+void test_hadamard() {
+	printf("\ntest matrix_hadamard\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 2);
+	Matrix* result = matrix_create(2, 2);
+	Matrix* expected = matrix_create(2, 2);
+
+	matrix_fill(A, -1.0f);
+	matrix_fill(B, 2.0f);
+	matrix_fill(expected, -2.0f);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	printf("expected matrix:\n");
+	matrix_print(expected);
+
+	matrix_hadamard(A, B, result);
+	printf("result matrix:\n");
+	matrix_print(result);
+
+	assert(matrix_equals(expected, result) == 0);
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+	matrix_free(&expected);
+}
+
+void test_hadamard_AB_dimensions() {
+	printf("\ntest matrix_hadamard A and B dimension mismatch\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(3, 3);
+	Matrix* result = matrix_create(2, 3);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	printf("should get a dimension error\n");
+
+	int ret = matrix_hadamard(A, B, result);
+	assert(ret == -1);
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+}
+
+void test_hadamard_result_dimension() {
+	printf("\ntest matrix_hadamard result dimension mismatch\n");
+
+	Matrix* A = matrix_create(2, 2);
+	Matrix* B = matrix_create(2, 2);
+	Matrix* result = matrix_create(3, 3);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	printf("should get a dimension error\n");
+	int ret = matrix_hadamard(A, B, result);
+
+	assert(ret == -1);
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+}
+
+void test_transpose() {
+	printf("\ntest matrix_transpose\n");
+
+	Matrix* A = matrix_create(2, 3);
+	Matrix* expected = matrix_create(3, 2);
+	Matrix* result;
+
+	matrix_set(A, 0, 0, 1.0f);
+	matrix_set(A, 0, 1, 1.0f);
+	matrix_set(A, 0, 2, 1.0f);
+
+	matrix_set(A, 1, 0, 2.0f);
+	matrix_set(A, 1, 1, 2.0f);
+	matrix_set(A, 1, 2, 2.0f);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	matrix_set(expected, 0, 0, 1.0f);
+	matrix_set(expected, 0, 1, 2.0f);
+
+	matrix_set(expected, 1, 0, 1.0f);
+	matrix_set(expected, 1, 1, 2.0f);
+
+	matrix_set(expected, 2, 0, 1.0f);
+	matrix_set(expected, 2, 1, 2.0f);
+
+	printf("expected matrix:\n");
+	matrix_print(expected);
+
+	result = matrix_transpose(A);
+
+	printf("result matrix:\n");
+	matrix_print(result);
+
+	assert(matrix_equals(expected, result) == 0);
+
+	matrix_free(&A);
+	matrix_free(&expected);
+	matrix_free(&result);
+}
+
 int main() {
 	test_create();
 	test_free();
@@ -613,6 +733,10 @@ int main() {
 	test_scalar_multiply();
 	test_scalar_dimension_mismatch();
 	test_fill();
+	test_hadamard();
+	test_hadamard_AB_dimensions();
+	test_hadamard_result_dimension();
+	test_transpose();
 
 	return 0;
 }

@@ -47,7 +47,6 @@ int matrix_subtract(const Matrix* A, const Matrix* B, Matrix* result);
 int matrix_scalar_multiply(const Matrix* A, float scalar, Matrix* result);
 int matrix_multiply(const Matrix* A, const Matrix* B, Matrix* result);
 int matrix_multiply_add(const Matrix* A, const Matrix* B, Matrix* result);
-// TODO: hadamard
 int matrix_hadamard(const Matrix* A, const Matrix* B, Matrix* result);
 
 /* Statistics */
@@ -60,7 +59,7 @@ int matrix_hadamard(const Matrix* A, const Matrix* B, Matrix* result);
 // argmax
 
 /* Transformations */
-// TODO: transpose
+Matrix* matrix_transpose(Matrix* A);
 // slice
 // concatenate
 // flatten
