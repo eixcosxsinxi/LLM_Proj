@@ -20,6 +20,8 @@ void test_create() {
 	assert(m->cols == cols);
 	printf("data = %.6f, m.data = %.6f\n", data, *(m->data));
 	assert(*(m->data) == data);
+
+	matrix_free(&m);
 }
 
 void test_free() {
@@ -715,6 +717,8 @@ void test_transpose() {
 }
 
 int run_matrix_tests() {
+	printf("\nthis is a test of matrices\n");
+	
 	test_create();
 	test_free();
 	test_get();
