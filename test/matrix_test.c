@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include "matrix.h"
+#include "matrix_test.h"
 
 void test_create() {
 	printf("\ntest matrix_create\n");
@@ -713,7 +714,7 @@ void test_transpose() {
 	matrix_free(&result);
 }
 
-int main() {
+int run_matrix_tests() {
 	test_create();
 	test_free();
 	test_get();

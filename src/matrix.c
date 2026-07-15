@@ -16,7 +16,7 @@ Matrix* matrix_create(int rows, int cols)
 	if (m == NULL) {
 		fprintf(stderr, "Failed to allocate matrix.\n");
 		free(m);
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 
 	m->rows = rows;
@@ -27,7 +27,7 @@ Matrix* matrix_create(int rows, int cols)
 	if (m->data == NULL) {
 		fprintf(stderr, "Failed to allocate matrix data.\n");
 		free(m);
-		exit(EXIT_FAILURE);
+		return NULL;
 	}
 
 	return m;

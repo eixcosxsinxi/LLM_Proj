@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "matrix.h"
+#include "linear_layer.h"
 
 int main() {
 

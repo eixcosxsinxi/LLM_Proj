@@ -8,24 +8,33 @@ LLM_and_TEST: LLM test_file
 	echo "all done!"
 
 # make LLM
-LLM: main.o matrix.o
+LLM: main.o matrix.o linear_layer.o
 	gcc -g $(addprefix $(BUILD)/,$^) -o $(PROD)/$@
 
 # make test_file
-test_file: matrix_test.o matrix.o
+test_file: main_test.o matrix_test.o linear_layer_test.o matrix.o linear_layer.o
 	gcc -g $(addprefix $(BUILD)/,$^) -o $(TEST)/$@
 
 # dependencies of LLM
 main.o: src/main.c
-	gcc -c -Iinclude $< -o $(BUILD)/$@
+	gcc -g -c -Iinclude $< -o $(BUILD)/$@
 
 # dependencies of test_file
+main_test.o: test/main_test.c
+	gcc -g -c -Iinclude $< -o $(BUILD)/$@
+
 matrix_test.o: test/matrix_test.c
-	gcc -c -Iinclude $< -o $(BUILD)/$@
+	gcc -g -c -Iinclude $< -o $(BUILD)/$@
+
+linear_layer_test.o: test/linear_layer_test.c
+	gcc -g -c -Iinclude $< -o $(BUILD)/$@
 
 # dependencies of both
-matrix.o: src/matrix.c# include/matrix.h
-	gcc -c -Iinclude $< -o $(BUILD)/$@
+matrix.o: src/matrix.c
+	gcc -g -c -Iinclude $< -o $(BUILD)/$@
+
+linear_layer.o: src/linear_layer.c
+	gcc -g -c -Iinclude $< -o $(BUILD)/$@
 
 .PHONY: test
 test: test_file
