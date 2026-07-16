@@ -28,7 +28,17 @@ void test_linear_create() {
 }
 
 void test_linear_free() {
+	printf("\ntest linear_free\n");
 
+	LinearLayer* l = linear_create(3, 4);
+
+	printf("weight dimensions are %d x %d\n", l->weight->rows, l->weight->cols);
+	printf("bias dimensions are %d x %d\n", l->bias->rows, l->bias->cols);
+
+	linear_free(&l);
+	printf("l after free = %p\n", (void*)l);
+
+	assert(l == NULL);
 }
 
 int run_linear_layer_tests() {
