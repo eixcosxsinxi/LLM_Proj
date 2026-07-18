@@ -27,6 +27,7 @@ void test_transpose();
 void test_broadcast();
 void test_broadcast_AB_dimensions();
 void test_broadcast_result_dimensions();
+void test_matrix_fill_uniform();
 
 int run_matrix_tests();
 

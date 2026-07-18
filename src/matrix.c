@@ -123,10 +123,24 @@ void matrix_fill(Matrix* A, const float val) {
 	}
 }
 
-// zeroes
-// ones
+/* this fills an entire matrix with 0.0f */
+void matrix_fill_zero(Matrix* A); // TODO: implement this
+
+/* this fills an entire matrix with 1.0f */
+void matrix_fill_one(Matrix* A); // TODO: implement this
+
 // identity
-// unifom
+
+/*
+* fills matrix with uniformly distributed random values
+* values are sampled from [lower, upper)
+*/
+void matrix_fill_uniform(Matrix* A, const float lower, const float upper) {
+	for (int i = 0; i < A->rows * A->cols; i++) { // shortcut for nested loop. works because how data is stored in Matrix type
+        float r = (float)rand() / ((float)RAND_MAX + 1.0f);
+		A->data[i] = lower + r * (upper - lower);
+	}
+}
 // normal
 // xavier
 // he

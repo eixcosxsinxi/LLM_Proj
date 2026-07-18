@@ -33,10 +33,10 @@ Matrix* matrix_multiply_new(const Matrix*A, const Matrix* B);
 
 /* Initialization */
 void matrix_fill(Matrix* A, const float val);
-// zeroes
-// ones
+void matrix_fill_zero(Matrix* A);
+void matrix_fill_one(Matrix* A);
 // identitiy
-// uniform
+void matrix_fill_uniform(Matrix* A, const float lower, const float upper);
 // normal
 // xavier
 // he

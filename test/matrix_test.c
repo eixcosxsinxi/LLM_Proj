@@ -804,6 +804,34 @@ void test_broadcast_result_dimensions() {
 	matrix_free(&result);
 }
 
+void test_matrix_fill_uniform()
+{
+    printf("\ntest matrix_fill_uniform\n");
+
+    Matrix* A = matrix_create(10, 10);
+
+    float lower = -1.0f;
+    float upper = 1.0f;
+
+    matrix_fill_uniform(A, lower, upper);
+
+	matrix_print(A);
+	printf("does it look like a 10 x 10 filled with random numbers between %f and %f?\n", lower, upper);
+
+	printf("you shouldn't see a single error\n");
+
+    for (int i = 0; i < A->rows * A->cols; i++)
+    {
+		if (A->data[i] < lower || A->data[i] >= upper) {
+			printf("outside bounds\n");
+		}
+        assert(A->data[i] >= lower);
+        assert(A->data[i] < upper);
+    }
+
+    matrix_free(&A);
+}
+
 int run_matrix_tests() {
 	printf("\nthis is a test of matrices\n");
 	
@@ -833,6 +861,7 @@ int run_matrix_tests() {
 	test_broadcast();
 	test_broadcast_AB_dimensions();
 	test_broadcast_result_dimensions();
+	test_matrix_fill_uniform();
 
 	return 0;
 }
