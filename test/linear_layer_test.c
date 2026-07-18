@@ -41,11 +41,52 @@ void test_linear_free() {
 	assert(l == NULL);
 }
 
+void test_linear_forward_no_bias() {
+	printf("\ntest linear_forward_no_bias\n");
+
+	LinearLayer* l = linear_create(3, 2);
+	
+	Matrix* input = matrix_create(4, 3);
+	Matrix* output = matrix_create(4, 2);
+	Matrix* expected = matrix_create(4, 2);
+
+	matrix_fill(input, 2.0f);
+	matrix_fill(l->weight, 3.0f);
+	matrix_fill(expected, 18.0f);
+
+	printf("input matrix:\n");
+	matrix_print(input);
+
+	printf("weight matrix:\n");
+	matrix_print(l->weight);
+
+	printf("expected result:\n");
+	matrix_print(expected);
+
+	int ret = linear_forward_no_bias(input, l, output);
+	
+	printf("result matrix:\n");
+	matrix_print(output);
+
+	assert(matrix_equals(expected, output) == 0);
+
+	linear_free(&l);
+	matrix_free(&input);
+	matrix_free(&output);
+	matrix_free(&expected);
+}
+
+void test_linear_forward() {
+	printf("\ntest linear_forward\n");
+}
+
 int run_linear_layer_tests() {
 	printf("\nthis is a test of linear layers\n");
 
 	test_linear_create();
 	test_linear_free();
+	test_linear_forward_no_bias();
+	test_linear_forward();
 
 	return 0;
 }

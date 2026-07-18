@@ -298,6 +298,27 @@ int matrix_hadamard(const Matrix* A, const Matrix* B, Matrix* result) {
 	}
 }
 
+/* This should broadcast a 1 x n matrix to a m x n matrix, add broadcasted matrix to matrix A, and store in result */
+int matrix_add_broadcast_row(const Matrix* A, const Matrix* B, Matrix* result) {
+	if (B->rows != 1 || B->cols != A->cols) {
+		fprintf(stderr, "dimensions for B are not 1 x A->cols\n");
+		return -1;
+	} else if (result->rows != A->rows || result->cols != A->cols) {
+		fprintf(stderr, "dimensions for result do not match A\n");
+		return -1;
+	} else {
+		for (int row = 0; row < A->rows; row++) {
+			for (int col = 0; col < A->cols; col++) {
+				matrix_set(result,
+						   row,
+						   col,
+						   matrix_get(B, 0, col) + 
+						   matrix_get(A, row, col));
+			}
+		}
+	}
+}
+
 /*
 * Matrix Statistics
 * these functions aid in the stochastic calculations on matrices

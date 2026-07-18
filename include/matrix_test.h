@@ -24,6 +24,9 @@ void test_hadamard();
 void test_hadamard_AB_dimensions();
 void test_hadamard_result_dimension();
 void test_transpose();
+void test_broadcast();
+void test_broadcast_AB_dimensions();
+void test_broadcast_result_dimensions();
 
 int run_matrix_tests();
 

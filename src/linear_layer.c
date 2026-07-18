@@ -40,3 +40,17 @@ void linear_free(LinearLayer** l) {
 	free(*l);
 	*l = NULL;
 }
+
+int linear_forward_no_bias(const Matrix* input, const LinearLayer* l, Matrix* output) {
+	return matrix_multiply(input, l->weight, output);
+}
+
+int linear_forward(const Matrix* input, const LinearLayer* l, Matrix* output) {
+	int ret = linear_forward_no_bias(input, l, output);
+
+	if (ret == -1) {
+		return ret;
+	} else {
+		return matrix_add_broadcast_row(output, l->bias, output);
+	}
+}

@@ -716,6 +716,94 @@ void test_transpose() {
 	matrix_free(&result);
 }
 
+void test_broadcast() {
+	printf("\ntest matrix_add_broadcast_row\n");
+
+	Matrix* A = matrix_create(3, 2);
+	Matrix* B = matrix_create(1, 2);
+	Matrix* result = matrix_create(3, 2);
+	Matrix* expected = matrix_create(3, 2);
+
+	matrix_fill(A, 1.0f);
+	matrix_fill(B, 2.0f);
+	matrix_fill(expected, 3.0f);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	printf("expected matrix:\n");
+	matrix_print(expected);
+
+	matrix_add_broadcast_row(A, B, result);
+
+	printf("result matrix:\n");
+	matrix_print(result);
+
+	assert(matrix_equals(expected, result) == 0);
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+	matrix_free(&expected);
+}
+
+void test_broadcast_AB_dimensions() {
+	printf("\ntest broadcast wrong AB dimensions\n");
+
+	Matrix* A = matrix_create(3, 2);
+	Matrix* B1 = matrix_create(2, 2);
+	Matrix* B2 = matrix_create(1, 3);
+	Matrix* result = matrix_create(3, 2);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix B1:\n");
+	matrix_print(B1);
+
+	printf("matrix B2:\n");
+	matrix_print(B2);
+
+	printf("A + B1 should give wrong dimension error:\n");
+	int ret = matrix_add_broadcast_row(A, B1, result);
+	assert(ret == -1);
+
+	printf("A + B2 should give wrong dimension error:\n");
+	ret = matrix_add_broadcast_row(A, B2, result);
+	assert(ret == -1);
+
+	matrix_free(&A);
+	matrix_free(&B1);
+	matrix_free(&B2);
+	matrix_free(&result);
+}
+
+void test_broadcast_result_dimensions() {
+	printf("\ntest broadcast wrong result dimensions\n");
+
+	Matrix* A = matrix_create(3, 2);
+	Matrix* B = matrix_create(1, 2);
+	Matrix* result = matrix_create(4, 5);
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix B:\n");
+	matrix_print(B);
+
+	printf("dimensions of result: %d x %d\n", result->rows, result->cols);
+
+	printf("should give wrong dimension error:\n");
+	matrix_add_broadcast_row(A, B, result);
+
+	matrix_free(&A);
+	matrix_free(&B);
+	matrix_free(&result);
+}
+
 int run_matrix_tests() {
 	printf("\nthis is a test of matrices\n");
 	
@@ -742,6 +830,9 @@ int run_matrix_tests() {
 	test_hadamard_AB_dimensions();
 	test_hadamard_result_dimension();
 	test_transpose();
+	test_broadcast();
+	test_broadcast_AB_dimensions();
+	test_broadcast_result_dimensions();
 
 	return 0;
 }
