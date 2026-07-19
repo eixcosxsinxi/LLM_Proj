@@ -63,7 +63,7 @@ void test_linear_forward_no_bias() {
 	printf("expected result:\n");
 	matrix_print(expected);
 
-	int ret = linear_forward_no_bias(input, l, output);
+	linear_forward_no_bias(input, l, output);
 	
 	printf("result matrix:\n");
 	matrix_print(output);

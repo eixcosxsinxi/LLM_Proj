@@ -31,11 +31,10 @@ LinearLayer* linear_create(int input_size, int output_size){
 		return NULL;
 	}
 
-	// initialize weight
-	linear_initialize_weight(l);
+	linear_initialize_weight(l); // initialize weight
 
-	// iniitialize bias
-	linear_initialize_bias(l);
+	
+	linear_initialize_bias(l); // iniitialize bias
 
 	return l;
 }

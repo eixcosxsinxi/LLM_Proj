@@ -124,10 +124,14 @@ void matrix_fill(Matrix* A, const float val) {
 }
 
 /* this fills an entire matrix with 0.0f */
-void matrix_fill_zero(Matrix* A); // TODO: implement this
+void matrix_fill_zero(Matrix* A) {
+	matrix_fill(A, 0.0f);
+}
 
 /* this fills an entire matrix with 1.0f */
-void matrix_fill_one(Matrix* A); // TODO: implement this
+void matrix_fill_one(Matrix* A) {
+	matrix_fill(A, 1.0f);
+}
 
 // identity
 
@@ -330,6 +334,7 @@ int matrix_add_broadcast_row(const Matrix* A, const Matrix* B, Matrix* result) {
 						   matrix_get(A, row, col));
 			}
 		}
+		return 0;
 	}
 }
 
