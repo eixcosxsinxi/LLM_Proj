@@ -32,19 +32,19 @@ LinearLayer* linear_create(int input_size, int output_size){
 	}
 
 	// initialize weight
-	initialize_weight(l);
+	linear_initialize_weight(l);
 
 	// iniitialize bias
-	initialize_bias(l);
+	linear_initialize_bias(l);
 
 	return l;
 }
 
-void initialize_weight(LinearLayer* l) {
+void linear_initialize_weight(LinearLayer* l) {
 	matrix_fill_uniform(l->weight, -1.0f, 1.0f);
 }
 
-void initialize_bias(LinearLayer* l) {
+void linear_initialize_bias(LinearLayer* l) {
 	matrix_fill_zero(l->bias);
 }
 

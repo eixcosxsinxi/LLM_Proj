@@ -21,8 +21,8 @@ void linear_free(LinearLayer** l);
 // Matrix* get_bias(LinearLayer* l);
 // void set_bias(LinearLayer* l, Matrix* B);
 
-void initialize_weight(LinearLayer* l);
-void initialize_bias(LinearLayer* l);
+void linear_initialize_weight(LinearLayer* l);
+void linear_initialize_bias(LinearLayer* l);
 
 int linear_forward_no_bias(const Matrix* input, const LinearLayer* l, Matrix* output);
 int linear_forward(const Matrix* input, const LinearLayer* l, Matrix* output);
