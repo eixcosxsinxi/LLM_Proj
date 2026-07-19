@@ -1,6 +1,8 @@
 #include <stdio.h>
-#include <stdint.h>
+#include <stdlib.h>
 #include <assert.h>
+
+#include "matrix.h"
 #include "linear_layer.h"
 #include "linear_layer_test.h"
 

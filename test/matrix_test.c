@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include <stdint.h>
+#include <stdlib.h>
 #include <assert.h>
+
 #include "matrix.h"
 #include "matrix_test.h"
 

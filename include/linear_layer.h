@@ -1,7 +1,7 @@
 #ifndef LINEAR_LAYER_H
 #define LINEAR_LAYER_H
 
-#include "Matrix.h"
+#include "matrix.h"
 
 /* Data */
 
