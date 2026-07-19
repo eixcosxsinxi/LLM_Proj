@@ -10,8 +10,6 @@ typedef struct
 	float* data;
 } Matrix;
 
-// TODO: define NaN
-
 /* function declarations */
 
 /* Creation */

@@ -3,12 +3,14 @@
 
 #include "matrix_test.h"
 #include "linear_layer_test.h"
+#include "loss_test.h"
 
 int main() {
 	srand(time(NULL)); // initialize seed for random generation
 
 	run_matrix_tests();
 	run_linear_layer_tests();
+	run_loss_tests();
 
 	return 0;
 }

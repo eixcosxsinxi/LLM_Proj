@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <assert.h>
 
 #include "matrix.h"
@@ -69,7 +70,24 @@ void test_get() {
 	matrix_free(&m);
 }
 
-// TODO: test for out of bounds
+void test_get_bounds_error() {
+	printf("\ntest matrix_get bounds error\n");
+
+	Matrix* A = matrix_create(2, 2);
+	int row = 4;
+	int col = 4;
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix_get acessing A at %d, %d\n", row, col);
+	printf("should see a bounds error:\n");
+	float ret = matrix_get(A, row, col);
+
+	assert(ret != ret);
+
+	matrix_free(&A);
+}
 
 void test_set() {
 	printf("\ntest matrix_set\n");
@@ -95,7 +113,25 @@ void test_set() {
 	matrix_free(&m);
 }
 
-// TODO: test for out of bounds
+void test_set_bounds_error() {
+	printf("\ntest matrix_set bounds error\n");
+
+	Matrix* A = matrix_create(2, 2);
+	int row = 4;
+	int col = 4;
+	float val = 1.0f;
+
+	printf("matrix A:\n");
+	matrix_print(A);
+
+	printf("matrix_set setting A at %d, %d\n", row, col);
+	printf("should see a bounds error:\n");
+	int ret = matrix_set(A, row, col, val);
+
+	assert(ret == -1);
+
+	matrix_free(&A);
+}
 
 void test_print() {
 	printf("\ntest matrix_print\n");
@@ -839,7 +875,9 @@ int run_matrix_tests() {
 	test_create();
 	test_free();
 	test_get();
+	test_get_bounds_error();
 	test_set();
+	test_set_bounds_error();
 	test_print();
 	test_multiply();
 	test_multiply_AB_dimensions();

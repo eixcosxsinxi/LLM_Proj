@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "matrix.h"
 
@@ -65,8 +66,10 @@ int matrix_copy(const Matrix* src, Matrix* dst) {
 
 /* this should return the value at the specified row and column in the matrix */
 float matrix_get(const Matrix* m, int row, int col) { // const so you don't accidentally modify the matrix
-	// TODO: check for out of bounds
-	// TODO: maybe use NAN as return
+	if (row < 0 || row > m->rows || col < 0 || col > m->cols) {
+		fprintf(stderr, "invalid row or col for this matrix\n");
+		return NAN;
+	}
 	return m->data[row * m->cols + col];
 }
 

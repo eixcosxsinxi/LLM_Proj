@@ -4,7 +4,9 @@
 void test_create();
 void test_free();
 void test_get();
+void test_get_bounds_error();
 void test_set();
+void test_set_bounds_error();
 void test_print();
 void test_multiply();
 void test_multiply_AB_dimensions();

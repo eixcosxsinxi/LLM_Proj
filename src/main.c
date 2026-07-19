@@ -3,6 +3,8 @@
 #include "matrix.h"
 #include "linear_layer.h"
 
+// TODO: develop your own NaN so you can remove math.h
+
 int main() {
 
 	Matrix* m = matrix_create(3, 3);
