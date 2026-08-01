@@ -8,6 +8,9 @@
 typedef struct {
 	Matrix* weight;
 	Matrix* bias;
+
+	Matrix* d_W;
+	Matrix* d_b;
 } LinearLayer;
 
 /* Funtions */
@@ -26,8 +29,8 @@ void linear_initialize_bias(LinearLayer* l);
 
 int linear_forward_no_bias(const Matrix* input, const LinearLayer* l, Matrix* output);
 int linear_forward(const Matrix* input, const LinearLayer* l, Matrix* output);
+int linear_backward(const Matrix* input, const Matrix* d_Y, LinearLayer* l, Matrix* d_X);
 
-// void linear_backward(LinearLayer* l);
 // void linear_update(LinearLayer* l);
 
 #endif

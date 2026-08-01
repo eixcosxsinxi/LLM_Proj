@@ -1,7 +1,8 @@
 #ifndef LOSS_TEST_H
 #define LOSS_TEST_H
 
-void test_mean_squared_error();
+void test_mse_forward();
+void test_mse_backward();
 
 void run_loss_tests();
 

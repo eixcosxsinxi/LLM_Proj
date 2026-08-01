@@ -3,6 +3,7 @@
 
 #include "matrix.h"
 
-float loss_mean_squared_error(const Matrix* prediction, const Matrix* target);
+float loss_mse_forward(const Matrix* prediction, const Matrix* target);
+int loss_mse_backward(const Matrix* prediction, const Matrix* target, Matrix* gradient);
 
 #endif

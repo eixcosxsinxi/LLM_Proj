@@ -58,7 +58,7 @@ int matrix_add_broadcast_row(const Matrix* A, const Matrix* B, Matrix* result);
 // argmax
 
 /* Transformations */
-Matrix* matrix_transpose(Matrix* A);
+Matrix* matrix_transpose(const Matrix* A);
 // slice
 // concatenate
 // flatten

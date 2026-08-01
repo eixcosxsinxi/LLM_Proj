@@ -117,6 +117,117 @@ void test_linear_forward() {
 	matrix_free(&expected);
 }
 
+void test_linear_backward_dW() {
+	printf("\ntest linear_backward d_W\n");
+
+	LinearLayer* l = linear_create(3, 2);
+
+	Matrix* input = matrix_create(4, 3);
+	Matrix* d_Y = matrix_create(4, 2);
+	Matrix* expected_d_W = matrix_create(3, 2);
+
+	matrix_fill(input, 2.0f);
+	matrix_fill(d_Y, 1.0f);
+	matrix_fill(expected_d_W, 8.0f);
+
+	printf("input matrix:\n");
+	matrix_print(input);
+
+	printf("d_Y matrix:\n");
+	matrix_print(d_Y);
+
+	printf("expected d_W matrix:\n");
+	matrix_print(expected_d_W);
+
+	linear_backward(input, d_Y, l, NULL);
+
+	printf("calculated d_W matrix:\n");
+	matrix_print(l->d_W);
+
+	assert(matrix_equals(expected_d_W, l->d_W) == 0);
+
+	linear_free(&l);
+	matrix_free(&input);
+	matrix_free(&d_Y);
+	matrix_free(&expected_d_W);
+}
+
+void test_linear_backward_db() {
+	printf("\ntest linear_backward d_b\n");
+
+	LinearLayer* l = linear_create(3, 2);
+
+	Matrix* input = matrix_create(4, 3);
+	Matrix* d_Y = matrix_create(4, 2);
+	Matrix* expected_d_b = matrix_create(1, 2);
+
+	matrix_fill(input, 2.0f);
+	matrix_fill(d_Y, 1.0f);
+	matrix_fill(expected_d_b, 4.0f);
+
+	printf("input matrix:\n");
+	matrix_print(input);
+
+	printf("d_Y matrix:\n");
+	matrix_print(d_Y);
+
+	printf("expected d_b matrix:\n");
+	matrix_print(expected_d_b);
+
+	linear_backward(input, d_Y, l, NULL);
+
+	printf("calculated d_b matrix:\n");
+	matrix_print(l->d_b);
+
+	assert(matrix_equals(expected_d_b, l->d_b) == 0);
+
+	linear_free(&l);
+	matrix_free(&input);
+	matrix_free(&d_Y);
+	matrix_free(&expected_d_b);
+}
+
+void test_linear_backward_dX() {
+	printf("\ntest linear_backward d_X\n");
+
+	LinearLayer* l = linear_create(3, 2);
+
+	Matrix* input = matrix_create(4, 3);
+	Matrix* d_Y = matrix_create(4, 2);
+	Matrix* d_X = matrix_create(4, 3);
+	Matrix* expected_d_X = matrix_create(4, 3);
+
+	matrix_fill(input, 2.0f);
+	matrix_fill(d_Y, 1.0f);
+	matrix_fill(l->weight, 3.0f);
+	matrix_fill(expected_d_X, 6.0f);
+
+	printf("input matrix:\n");
+	matrix_print(input);
+
+	printf("d_Y matrix:\n");
+	matrix_print(d_Y);
+
+	printf("weight matrix:\n");
+	matrix_print(l->weight);
+
+	printf("expected d_X matrix:\n");
+	matrix_print(expected_d_X);
+
+	linear_backward(input, d_Y, l, d_X);
+
+	printf("calculated d_X matrix:\n");
+	matrix_print(d_X);
+
+	assert(matrix_equals(expected_d_X, d_X) == 0);
+
+	linear_free(&l);
+	matrix_free(&input);
+	matrix_free(&d_Y);
+	matrix_free(&d_X);
+	matrix_free(&expected_d_X);
+}
+
 int run_linear_layer_tests() {
 	printf("\nthis is a test of linear layers\n");
 
@@ -124,6 +235,9 @@ int run_linear_layer_tests() {
 	test_linear_free();
 	test_linear_forward_no_bias();
 	test_linear_forward();
+	test_linear_backward_dW();
+	test_linear_backward_db();
+	test_linear_backward_dX();
 
 	return 0;
 }

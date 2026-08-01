@@ -359,7 +359,7 @@ int matrix_add_broadcast_row(const Matrix* A, const Matrix* B, Matrix* result) {
 * necessary linear algebra for accessing and rearranging data in matrices
 */
 
-Matrix* matrix_transpose(Matrix* A) {
+Matrix* matrix_transpose(const Matrix* A) {
 	Matrix* result = matrix_create(A->cols, A->rows);
 	
 	for (int row = 0; row < A->rows; row++) {
