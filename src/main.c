@@ -6,6 +6,7 @@
 // TODO: develop your own NaN so you can remove math.h
 // TODO: go through all methods that have Matrix as parameter and add check if that matrix is NULL
 // TODO: reformat matrix_transpose to take in input and output matrix so that return can be int for failure
+// TODO: later when tensor library is created, reformat all Matrix as Tensor
 
 int main() {
 
