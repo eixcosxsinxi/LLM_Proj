@@ -7,15 +7,15 @@
 
 typedef struct {
 	float learning_rate;
-} SGD_opt;
+} BatchGD_opt;
 
 /* Creation */
-SGD_opt* sgd_create(float learning_rate);
+BatchGD_opt* BatchGD_create(float learning_rate);
 
 /* Anihilation */
-void sgd_free(SGD_opt** opt);
+void BatchGD_free(BatchGD_opt** opt);
 
 /* Update */
-int sgd_step(const SGD_opt* opt, Matrix* parameter, const Matrix* gradient);
+int BatchGD_step(const BatchGD_opt* opt, Matrix* parameter, const Matrix* gradient);
 
 #endif
